@@ -5,7 +5,7 @@ import ir.arg.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface App extends ErrorCode, APIMethods, Client {
+public interface App extends ErrorCode, APIMethods {
     String sendRequest(@NotNull String request);
 
     String getDeviceInfo();
