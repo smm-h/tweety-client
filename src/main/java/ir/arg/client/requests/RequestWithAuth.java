@@ -1,14 +1,14 @@
 package ir.arg.client.requests;
 
-import ir.arg.client.Client;
+import ir.arg.client.App;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 public abstract class RequestWithAuth extends RequestImpl {
 
-    public RequestWithAuth(@NotNull Client client) {
-        super(client);
+    public RequestWithAuth(@NotNull App app) {
+        super(app);
     }
 
     @NotNull
@@ -19,7 +19,7 @@ public abstract class RequestWithAuth extends RequestImpl {
 
     @Override
     public @Nullable String make() {
-        final String auth = client.getAuthentication();
+        final String auth = app.getAuthentication();
         if (auth == null) {
             System.out.println("Please sign-in and try again.");
             return null;
@@ -32,7 +32,7 @@ public abstract class RequestWithAuth extends RequestImpl {
     public void react(@NotNull JSONObject response) {
         if (response.getInt("error_code") == AUTHENTICATION_FAILED) {
             System.out.println("Failed to authenticate; please sign-in again.");
-            client.signOut();
+            app.signOut();
         }
     }
 }

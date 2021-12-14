@@ -1,6 +1,6 @@
 package ir.arg.client.requests;
 
-import ir.arg.client.Client;
+import ir.arg.client.App;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -10,25 +10,25 @@ public class SignIn extends RequestImpl {
     @NotNull
     private final String username, password, token;
 
-    public SignIn(@NotNull final Client client, @NotNull final String username, @NotNull final String password) {
-        super(client);
+    public SignIn(@NotNull final App app, @NotNull final String username, @NotNull final String password) {
+        super(app);
         this.username = JSONObject.quote(username);
         this.password = JSONObject.quote(password);
-        this.token = JSONObject.quote(client.generateToken());
+        this.token = JSONObject.quote(app.generateToken());
     }
 
     @Override
     public @Nullable String make() {
-        return "{\"method\": \"" + SIGN_IN + "\", \"username\": " + username + ", \"password\": " + password + ", \"generated_token\": " + token + ", \"device_info\": " + JSONObject.quote(client.getDeviceInfo()) + "}";
+        return "{\"method\": \"" + SIGN_IN + "\", \"username\": " + username + ", \"password\": " + password + ", \"generated_token\": " + token + ", \"device_info\": " + JSONObject.quote(app.getDeviceInfo()) + "}";
     }
 
     @Override
     public void react(@NotNull JSONObject response) {
         final int errorCode = response.getInt("error_code");
         if (errorCode == NO_ERROR) {
-            client.signInWithToken(username, token);
+            app.signInWithToken(username, token);
         } else {
-            client.onError(errorCode);
+            app.onError(errorCode);
         }
     }
 }

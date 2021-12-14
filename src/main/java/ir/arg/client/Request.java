@@ -12,10 +12,10 @@ public interface Request extends ErrorCode, APIMethods {
     default void send() {
         final String made = make();
         if (made != null)
-            react(new JSONObject(new JSONTokener(getClient().sendRequest(made))));
+            react(new JSONObject(new JSONTokener(getApp().sendRequest(made))));
     }
 
-    @NotNull Client getClient();
+    @NotNull App getApp();
 
     @Nullable String make();
 

@@ -1,27 +1,18 @@
 package ir.arg.client;
 
-import ir.arg.shared.APIMethods;
-import ir.arg.shared.ErrorCode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public interface Client extends ErrorCode, APIMethods {
-    String sendRequest(@NotNull final String request);
+public interface Client {
 
-    String getDeviceInfo();
+    int getDefaultPort();
 
-    String generateToken();
+    boolean connectToHost(@NotNull String address, int port);
 
-    void signInWithToken(@NotNull final String username, @NotNull final String token);
-
-    void signOut();
-
-    @Nullable
-    String getAuthentication();
-
-    default boolean isSignedIn() {
-        return getAuthentication() != null;
+    default boolean connectToHost(@NotNull String address) {
+        return connectToHost(address, getDefaultPort());
     }
 
-    void onError(final int errorCode);
+    default boolean connectToLocalHost() {
+        return connectToHost("127.0.0.1");
+    }
 }

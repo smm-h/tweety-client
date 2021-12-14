@@ -1,6 +1,6 @@
 package ir.arg.client.requests;
 
-import ir.arg.client.Client;
+import ir.arg.client.App;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -10,8 +10,8 @@ public class UsernameExists extends RequestImpl {
     private final String username;
     public boolean exists;
 
-    public UsernameExists(@NotNull Client client, @NotNull String username) {
-        super(client);
+    public UsernameExists(@NotNull App app, @NotNull String username) {
+        super(app);
         this.username = username;
     }
 

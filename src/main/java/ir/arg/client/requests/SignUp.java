@@ -1,6 +1,6 @@
 package ir.arg.client.requests;
 
-import ir.arg.client.Client;
+import ir.arg.client.App;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
@@ -10,8 +10,8 @@ public class SignUp extends RequestImpl {
     @NotNull
     private final String username, password;
 
-    public SignUp(@NotNull final Client client, @NotNull final String username, @NotNull final String password) {
-        super(client);
+    public SignUp(@NotNull final App app, @NotNull final String username, @NotNull final String password) {
+        super(app);
         this.username = JSONObject.quote(username);
         this.password = JSONObject.quote(password);
     }
@@ -27,7 +27,7 @@ public class SignUp extends RequestImpl {
         if (errorCode == NO_ERROR) {
             System.out.println("Signing up was successful.");
         } else {
-            client.onError(errorCode);
+            app.onError(errorCode);
         }
     }
 }
