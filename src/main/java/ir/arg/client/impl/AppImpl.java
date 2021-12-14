@@ -25,15 +25,16 @@ public class AppImpl implements App {
     private String authentication = null;
 
     public AppImpl() {
-        try {
-            switchUser("arg", "abcDEF123!@#");
-//            createTweet("Hello, Tweety!");
-//            createTweet("Can't wait for the new Spider-man movie.");
-            sendRequest("{\"method\": \"" + GET_TWEETS_OF_USER + "\", \"username\": \"arg\"}");
-//            switchUser("other_user123", "]!0.a.z.9![");
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+//        try {
+//            switchUser("arg", "abcDEF123!@#");
+////            createTweet("Hello, Tweety!");
+////            createTweet("Can't wait for the new Spider-man movie.");
+//            sendRequest("{\"method\": \"" + GET_TWEETS_OF_USER + "\", \"username\": \"arg\"}");
+////            switchUser("other_user123", "]!0.a.z.9![");
+//        } catch (Throwable e) {
+//            e.printStackTrace();
+//        }
+        connectToLocalHost();
     }
 
     private boolean usernameExists(@NotNull final String username) {
@@ -61,9 +62,11 @@ public class AppImpl implements App {
         return RandomHex.generate(32);
     }
 
+    // TODO annotate #sendRequest as @NotNull
     @Override
     public String sendRequest(@NotNull String request) {
-        return request(request);
+//        return request(request);
+        return null;
     }
 
     @Override
@@ -120,9 +123,11 @@ public class AppImpl implements App {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            return true;
         } catch (UnknownHostException u) {
             System.out.println("Unknown Host");
         } catch (IOException ignored) {
         }
+        return false;
     }
 }
