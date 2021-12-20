@@ -1,18 +1,22 @@
 package ir.arg.client;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Client {
 
     int getDefaultPort();
 
-    boolean connectToHost(@NotNull String address, int port);
+    @Nullable
+    String connectToHost(@NotNull String address, int port, @NotNull String request);
 
-    default boolean connectToHost(@NotNull String address) {
-        return connectToHost(address, getDefaultPort());
+    @Nullable
+    default String connectToHost(@NotNull String address, @NotNull String request) {
+        return connectToHost(address, getDefaultPort(), request);
     }
 
-    default boolean connectToLocalHost() {
-        return connectToHost("127.0.0.1");
+    @Nullable
+    default String connectToLocalHost(@NotNull String request) {
+        return connectToHost("127.0.0.1", request);
     }
 }

@@ -2,18 +2,35 @@ package ir.arg.client.impl;
 
 import ir.arg.client.Client;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ClientImpl implements Client {
 
     public static void main(String[] args) {
-        new ClientImpl().connectToLocalHost();
+        final Client client = new ClientImpl();
+        final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Type in your requests as JSON to process them; or type in '.' to stop.");
+        while (true) {
+            try {
+                System.out.print(">>> ");
+                final String request = input.readLine();
+                if (request.equals(".")) break;
+                final String response = client.connectToLocalHost(request);
+                System.out.print("=== ");
+                System.out.println(response);
+            } catch (IOException e) {
+                System.err.println("Something went wrong; try again please");
+            }
+        }
+        try {
+            input.close();
+        } catch (IOException e) {
+            System.err.println("Failed to close input");
+        }
     }
 
     @Override
@@ -21,35 +38,36 @@ public class ClientImpl implements Client {
         return 7000;
     }
 
+    @Nullable
     @Override
-    public boolean connectToHost(@NotNull String address, int port) {
+    public String connectToHost(@NotNull final String address, int port, @NotNull final String request) {
+        String response = null;
         try {
             final Socket socket = new Socket(address, port);
-            final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-            final DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            String line = "";
-            while (!line.equals(".")) {
+            final DataInputStream res = new DataInputStream(socket.getInputStream());
+            final DataOutputStream req = new DataOutputStream(socket.getOutputStream());
+            try {
+                req.writeUTF(request);
                 try {
-                    System.out.print("> ");
-                    line = input.readLine();
-                    out.writeUTF(line);
+                    response = res.readUTF();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    System.err.println("Could not read response");
                 }
+            } catch (IOException e) {
+                System.err.println("Could not write request");
             }
             try {
-                input.close();
-                out.close();
+                res.close();
+                req.close();
                 socket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Could not close resources");
             }
-            return true;
         } catch (UnknownHostException u) {
-            System.out.println("Unknown Host");
-        } catch (IOException ignored) {
-            System.out.println("IO error occurred");
+            System.err.println("Could not find the host");
+        } catch (IOException e) {
+            System.err.println("Connection failed");
         }
-        return false;
+        return response;
     }
 }
